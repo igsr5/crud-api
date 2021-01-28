@@ -42,16 +42,17 @@ gem 'fastercsv'
 gem 'devise'
 gem 'cancancan'
 gem 'pg'
-gem 'sprockets'
 gem 'babel-transpiler'
-gem 'sprockets-rails'
 gem 'xmlrpc' # depended by gravatar-ultimate
 gem 'gravatar-ultimate'
 gem "autoprefixer-rails"
+gem 'sprockets', '~> 3.7.2'
+gem 'sprockets-rails'
 gem 'rounding'
 gem 'webpacker'
 gem 'excelout', git: 'git@github.com:mk-system/excelout-ruby.git'
 gem 'slack-incoming-webhooks'
+gem 'bootsnap', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
