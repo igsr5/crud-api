@@ -25,7 +25,11 @@ module Api
       end
 
       def update
-
+        if @post.update(post_params)
+          render json: { status: 'SUCCESS', message: 'Update the post', data: @post }
+        else
+          render json: { status: 'FAILED', message: 'cannot Update the post' }
+        end
       end
 
       def destroy
