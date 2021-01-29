@@ -37,6 +37,10 @@ module Api
       def set_post
         @post = Post.find_by(id: params[:id])
       end
+
+      def post_params
+        params.require.permit(:posts)
+      end
     end
   end
 end
