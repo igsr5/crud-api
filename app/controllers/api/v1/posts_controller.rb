@@ -9,9 +9,9 @@ module Api
 
       def show
         if @post
-          render json: { status: 'SUCCESS', message: 'Loaded the post', data: @post }
+          render json: { status: 'success', message: 'loaded the post', data: @post }
         else
-          render json: { status: 'FAILED', message: 'cannot loaded the post' }
+          render json: { status: 'failed', message: 'cannot loaded the post' }
         end
       end
 
@@ -24,8 +24,12 @@ module Api
       end
 
       def destroy
-        @post.destroy
-        render json: { status: 'SUCCESS', message: 'Deleted the post', data: @post }
+        if @post
+          @post.destroy
+          render json: { status: 'SUCCESS', message: 'Deleted the post', data: @post }
+        else
+          render json: { status: 'failed', message: 'cannot loaded the post' }
+        end
       end
 
       private
