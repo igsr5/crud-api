@@ -8,18 +8,10 @@ module Api
       end
 
       def show
-
-      end
-
-      def new
-
+        render json: { status: 'SUCCESS', message: 'Loaded the post', data: @post }
       end
 
       def create
-
-      end
-
-      def edit
 
       end
 
@@ -28,7 +20,8 @@ module Api
       end
 
       def destroy
-
+        @post.destroy
+        render json: { status: 'SUCCESS', message: 'Deleted the post', data: @post }
       end
 
       private
