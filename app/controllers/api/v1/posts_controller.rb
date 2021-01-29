@@ -8,7 +8,11 @@ module Api
       end
 
       def show
-        render json: { status: 'SUCCESS', message: 'Loaded the post', data: @post }
+        if @post
+          render json: { status: 'SUCCESS', message: 'Loaded the post', data: @post }
+        else
+          render json: { status: 'FAILED', message: 'cannot loaded the post' }
+        end
       end
 
       def create
@@ -27,7 +31,7 @@ module Api
       private
 
       def set_post
-        @post = Post.find(params[:id])
+        @post = Post.find_by(id: params[:id])
       end
     end
   end
