@@ -1,29 +1,35 @@
-class PostsController < ApplicationController
-  def index
+module Api
+  module V1
+    class PostsController < ApplicationController
+      def index
+        posts = Post.order(created_at: :desc)
+        render json: { status: 'SUCCESS', message: 'Loaded post', data: posts }
+      end
 
-  end
-  
-  def show
+      def show
 
-  end
+      end
 
-  def new
+      def new
 
-  end
+      end
 
-  def create
+      def create
 
-  end
+      end
 
-  def edit
+      def edit
 
-  end
+      end
 
-  def update
+      def update
 
-  end
+      end
 
-  def destroy
+      def destroy
 
+      end
+    end
   end
 end
+
