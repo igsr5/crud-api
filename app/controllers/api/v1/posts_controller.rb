@@ -16,7 +16,12 @@ module Api
       end
 
       def create
-
+        post = Post.new(post_params)
+        if post.save
+          render json: { status: 'SUCCESS', message: 'Create the post', data: post }
+        else
+          render json: { status: 'FAILED', message: 'cannot create the post' }
+        end
       end
 
       def update
