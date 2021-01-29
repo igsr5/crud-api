@@ -20,7 +20,7 @@ module Api
         if post.save
           render json: { status: 'SUCCESS', message: 'Create the post', data: post }
         else
-          render json: { status: 'FAILED', message: 'cannot create the post' }
+          render json: { status: 'FAILED', message: 'cannot create the post',data: post.errors }
         end
       end
 
@@ -28,7 +28,7 @@ module Api
         if @post.update(post_params)
           render json: { status: 'SUCCESS', message: 'Update the post', data: @post }
         else
-          render json: { status: 'FAILED', message: 'cannot Update the post' }
+          render json: { status: 'FAILED', message: 'cannot Update the post', data: @post.errors }
         end
       end
 
@@ -37,7 +37,7 @@ module Api
           @post.destroy
           render json: { status: 'SUCCESS', message: 'Deleted the post', data: @post }
         else
-          render json: { status: 'failed', message: 'cannot loaded the post' }
+          render json: { status: 'failed', message: 'cannot loaded the post'}
         end
       end
 
