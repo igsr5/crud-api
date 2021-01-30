@@ -48,7 +48,7 @@ RSpec.describe 'Posts', type: :request do
     end
 
     it 'can create the post' do
-      expect(@post.title).to eq('hoge')
+      expect(@post.title).to eq(@valid_params[:post][:title])
     end
   end
 
@@ -61,6 +61,14 @@ RSpec.describe 'Posts', type: :request do
 
     it 'status == 200' do
       expect(response.status).to eq(200)
+    end
+
+    before do
+      @updated_post = Post.first
+    end
+
+    it 'can update the post' do
+      expect(@updated_post.title).to eq(@valid_params[:post][:title])
     end
   end
 end
