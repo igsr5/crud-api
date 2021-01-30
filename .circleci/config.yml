@@ -37,17 +37,6 @@ jobs:
           key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - restore_cache:
-          keys:
-            - rails-demo-yarn-{{ checksum "yarn.lock" }}
-            - rails-demo-yarn-
-      - run:
-          name: yarn install
-          command: yarn isntall --cache-folder ~/.cache/yarn
-      - save_cache:
-          key: rails-demo-yarn-{{ checksum "yarn.lock" }}
-          paths:
-            ~/.cache/yarn
       - run:
           name: define DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
