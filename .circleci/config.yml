@@ -20,8 +20,10 @@ jobs:
       - checkout
 
       - run:
-          name: update bundler
+          name: bundle install
           command: gem install bundler:2.1.4
+      - run:
+          name: update bundler
           command: bundle -v
 
       - restore_cache:
