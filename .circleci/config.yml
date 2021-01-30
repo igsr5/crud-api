@@ -1,47 +1,63 @@
-language: ruby
-services:
-  - postgres
-rvm:
-  - 2.7.2
-bundler_args: --without development production doc
-env:
-  global:
-    - TZ="Asia/Tokyo"
-    - RUN_AS_ROOT=true
-    - RAILS_ENV=test
-    - COVERAGE_REPORTS=shippable/codecoverage
-    - SMTP_FROM=test@example.com
-build:
-  pre_ci_boot:
-    image_name: drydock/u16nodall
-    image_tag: latest
-    pull: true
-  cache: true
-  cache_dir_list:
-    - /usr/local/rvm/gems/ruby-2.7.2
-    - /usr/local/rvm/rubies/ruby-2.7.2
-  ci:
-    - echo 'Asia/Tokyo' | sudo tee /etc/timezone
-    - apt remove google-chrome-stable chromium-browser
-    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    - echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
-    - curl https://downloads.apache.org/cassandra/KEYS | sudo apt-key add -
-    - rm /etc/apt/sources.list.d/basho_riak.list
-    - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    - apt update -y
-    - at install -y google-chrome-stable
-    - google-chrome --version
-    - mkdir -p shippable/testresults
-    - sudo psql -c "create database meizeimailer_test;" -U postgres
-    - nvm install $(cat .node-version)
-    - nvm use $(cat .node-version)
-    - gem install bundler -v 2.1.4
-    - bundle install $SHIPPABLE_BUNDLER_ARGS
-    - bin/yarn install --frozen-lockfile
-    - bundle exec rake db:schema:load
-    - bundle exec rspec -f progress -f RspecJunitFormatter -o shippable/testresults/results.xml
-integrations:
-  - integrationName: email
-    type: email
-    on_success: change
-    on_failure: alwaysp
+version: 2
+jobs:
+  build:
+    parallelism: 3
+    docker:
+      - image: circleci/ruby:2.7.2-jessie-node
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          PGHOST: 127.0.0.1
+          PGUSER: circleci-demo-ruby
+          RAILS_ENV: test
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: circleci-demo-ruby
+          POSTGRES_DB: rails_post
+          POSTGRES_PASSWORD: ''
+    steps:
+      - checkout
+
+      - run:
+        name: update bundler
+        command: bundle -v
+
+      - restore_cache:
+        keys:
+          - rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
+          - rails-demo-bundle-v2-
+      - run:
+        name: bundle isntall
+        command: bundle check --path vendor/bundle || bundle install --deployment
+      - save_cache:
+        key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+      - restore_cache:
+        keys:
+          - rails-demo-yarn-{{ checksum "yarn.lock" }}
+          - rails-demo-yarn-
+      - run:
+        name: yarn install
+        command: yarn isntall --cache-folder ~/.cache/yarn
+      - save_cache:
+        key: rails-demo-yarn-{{ checksum "yarn.lock" }}
+        paths:
+          ~/.cache/yarn
+      - run:
+        name: define DB
+        command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+        name: set DB
+        command: bin/rails db:schema:load --trace
+      - run:
+        name: rspec
+        command: |
+          bundle exec rspec --profile 10 \
+                  --format RspecJunitFormatter \
+                  --out test_results/rspec.xml \
+                  --format progress \
+                  $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+      - store_test_results:
+        path: test_results
