@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Posts', type: :request do
+  let(:one_post) { Post.create(title: 'memo1') }
+
   context 'GET: /posts' do
     before do
       FactoryBot.create_list(:post, 10)
@@ -19,8 +21,7 @@ RSpec.describe 'Posts', type: :request do
 
   context 'GET: /posts/:id' do
     before do
-      @post = Post.create(title: 'memo1')
-      get "/api/v1/posts/#{@post.id}"
+      get "/api/v1/posts/#{one_post.id}"
       @json = JSON.parse(response.body)
     end
 
@@ -54,9 +55,8 @@ RSpec.describe 'Posts', type: :request do
 
   context 'PUT: api/v1/posts/:id' do
     before do
-      post = Post.create(title: 'memo1')
       @valid_params = { post: { title: 'hoge' } }
-      put "/api/v1/posts/#{post.id}", params: @valid_params
+      put "/api/v1/posts/#{one_post.id}", params: @valid_params
     end
 
     it 'status == 200' do
