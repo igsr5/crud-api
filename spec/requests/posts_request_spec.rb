@@ -51,4 +51,16 @@ RSpec.describe 'Posts', type: :request do
       expect(@post.title).to eq('hoge')
     end
   end
+
+  context 'PUT: api/v1/posts' do
+    before do
+      @post = Post.create(title: 'memo1')
+      @valid_params = { post: { title: 'hoge' } }
+      put "/api/v1/posts/#{@post.id}", params: @valid_params
+    end
+
+    it 'status == 200' do
+      expect(response.status).to eq(200)
+    end
+  end
 end
