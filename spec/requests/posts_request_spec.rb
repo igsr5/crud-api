@@ -81,5 +81,9 @@ RSpec.describe 'Posts', type: :request do
     it 'status == 200' do
       expect(response.status).to eq(200)
     end
+
+    it 'can delete the post' do
+      expect(Post.all.count).to be_zero
+    end
   end
 end
