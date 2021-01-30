@@ -32,4 +32,15 @@ RSpec.describe 'Posts', type: :request do
       expect(@json['data']['title']).to eq('memo1')
     end
   end
+
+  context 'POST: /posts/create' do
+    before do
+      @valid_params = { post: { title: 'hoge' } }
+      post '/api/v1/posts', params: @valid_params
+    end
+
+    it 'status == 200' do
+      expect(response.status).to eq(200)
+    end
+  end
 end
