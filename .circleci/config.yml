@@ -43,7 +43,7 @@ jobs:
       - run:
           name: set DB
           command: bin/rails db:schema:load --trace
-        run:
+      - run:
           name: rspec install
           command: bin/rails g rspec:install
       - run:
