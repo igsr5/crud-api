@@ -52,11 +52,11 @@ RSpec.describe 'Posts', type: :request do
     end
   end
 
-  context 'PUT: api/v1/posts' do
+  context 'PUT: api/v1/posts/:id' do
     before do
-      @post = Post.create(title: 'memo1')
+      post = Post.create(title: 'memo1')
       @valid_params = { post: { title: 'hoge' } }
-      put "/api/v1/posts/#{@post.id}", params: @valid_params
+      put "/api/v1/posts/#{post.id}", params: @valid_params
     end
 
     it 'status == 200' do
@@ -69,6 +69,17 @@ RSpec.describe 'Posts', type: :request do
 
     it 'can update the post' do
       expect(@updated_post.title).to eq(@valid_params[:post][:title])
+    end
+  end
+
+  context 'DELETE: api/v1/posts/:id' do
+    before do
+      post = Post.create(title: 'memo1')
+      delete "/api/v1/posts/#{post.id}"
+    end
+
+    it 'status == 200' do
+      expect(response.status).to eq(200)
     end
   end
 end
