@@ -20,44 +20,44 @@ jobs:
       - checkout
 
       - run:
-        name: update bundler
-        command: bundle -v
+          name: update bundler
+          command: bundle -v
 
       - restore_cache:
-        keys:
-          - rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
-          - rails-demo-bundle-v2-
+          keys:
+            - rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
+            - rails-demo-bundle-v2-
       - run:
-        name: bundle isntall
-        command: bundle check --path vendor/bundle || bundle install --deployment
+          name: bundle isntall
+          command: bundle check --path vendor/bundle || bundle install --deployment
       - save_cache:
-        key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
+          key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
       - restore_cache:
-        keys:
-          - rails-demo-yarn-{{ checksum "yarn.lock" }}
-          - rails-demo-yarn-
+          keys:
+            - rails-demo-yarn-{{ checksum "yarn.lock" }}
+            - rails-demo-yarn-
       - run:
-        name: yarn install
-        command: yarn isntall --cache-folder ~/.cache/yarn
+          name: yarn install
+          command: yarn isntall --cache-folder ~/.cache/yarn
       - save_cache:
-        key: rails-demo-yarn-{{ checksum "yarn.lock" }}
-        paths:
+          key: rails-demo-yarn-{{ checksum "yarn.lock" }}
+          paths:
           ~/.cache/yarn
       - run:
-        name: define DB
-        command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: define DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
-        name: set DB
-        command: bin/rails db:schema:load --trace
+          name: set DB
+          command: bin/rails db:schema:load --trace
       - run:
-        name: rspec
-        command: |
-          bundle exec rspec --profile 10 \
-                  --format RspecJunitFormatter \
-                  --out test_results/rspec.xml \
-                  --format progress \
-                  $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+          name: rspec
+          command: |
+            bundle exec rspec --profile 10 \
+                    --format RspecJunitFormatter \
+                    --out test_results/rspec.xml \
+                    --format progress \
+                    $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
       - store_test_results:
-        path: test_results
+          path: test_results
