@@ -73,8 +73,7 @@ RSpec.describe 'Posts', type: :request do
 
   context 'DELETE: api/v1/posts/:id' do
     before do
-      post = Post.create(title: 'memo1')
-      delete "/api/v1/posts/#{post.id}"
+      delete "/api/v1/posts/#{one_post.id}"
     end
 
     it 'status == 200' do
