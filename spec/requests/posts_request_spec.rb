@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Posts', type: :request do
   let(:one_post) { Post.create(title: 'memo1') }
+  let(:params) { { post: { title: 'hoge' } } }
 
   context 'GET: /posts' do
     before do
@@ -36,8 +37,7 @@ RSpec.describe 'Posts', type: :request do
 
   context 'POST: /posts/create' do
     before do
-      @valid_params = { post: { title: 'hoge' } }
-      post '/api/v1/posts', params: @valid_params
+      post '/api/v1/posts', params: params
     end
 
     it 'status == 200' do
@@ -49,14 +49,13 @@ RSpec.describe 'Posts', type: :request do
     end
 
     it 'can create the post' do
-      expect(@post.title).to eq(@valid_params[:post][:title])
+      expect(@post.title).to eq(params[:post][:title])
     end
   end
 
   context 'PUT: api/v1/posts/:id' do
     before do
-      @valid_params = { post: { title: 'hoge' } }
-      put "/api/v1/posts/#{one_post.id}", params: @valid_params
+      put "/api/v1/posts/#{one_post.id}", params: params
     end
 
     it 'status == 200' do
@@ -68,7 +67,7 @@ RSpec.describe 'Posts', type: :request do
     end
 
     it 'can update the post' do
-      expect(@updated_post.title).to eq(@valid_params[:post][:title])
+      expect(@updated_post.title).to eq(params[:post][:title])
     end
   end
 
