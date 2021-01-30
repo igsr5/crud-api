@@ -32,7 +32,7 @@ jobs:
             - rails-demo-bundle-v2-
       - run:
           name: bundle isntall
-          command: bundle install --deployment
+          command: bundle install
       - save_cache:
           key: rails-demo-bundle-v2-{{ checksum "Gemfile.lock" }}
           paths:
