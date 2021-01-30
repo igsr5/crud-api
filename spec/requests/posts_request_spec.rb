@@ -42,5 +42,13 @@ RSpec.describe 'Posts', type: :request do
     it 'status == 200' do
       expect(response.status).to eq(200)
     end
+
+    before do
+      @post = Post.first
+    end
+
+    it 'can create the post' do
+      expect(@post.title).to eq('hoge')
+    end
   end
 end
